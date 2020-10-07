@@ -9,6 +9,8 @@ import java.util.UUID;
 @RestController
 public class TestController {
 
+    private int i;
+
     @RequestMapping("/")
     public String index(){
         return "Hello world!";
@@ -17,5 +19,10 @@ public class TestController {
     @RequestMapping("/randomToken")
     public String randomToken(){
         return UUID.randomUUID().toString();
+    }
+
+    @RequestMapping("/count")
+    public String count(){
+        return String.valueOf(++i);
     }
 }
