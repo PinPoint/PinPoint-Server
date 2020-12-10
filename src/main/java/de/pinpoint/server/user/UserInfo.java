@@ -11,6 +11,7 @@ import java.util.UUID;
 public class UserInfo {
     private UUID uuid;
     private String name;
+    private String color;
     private PinpointPosition position;
 
     @Override
