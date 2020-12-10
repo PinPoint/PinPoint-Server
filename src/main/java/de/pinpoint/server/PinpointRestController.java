@@ -20,7 +20,7 @@ public class PinpointRestController {
 
     @RequestMapping("/")
     public String index() {
-        return "Hello world!";
+        return "Hi there :)";
     }
 
     @RequestMapping("/generate")
