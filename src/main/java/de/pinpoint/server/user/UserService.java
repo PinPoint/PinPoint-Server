@@ -1,30 +1,33 @@
 package de.pinpoint.server.user;
 
 import de.pinpoint.server.Constants;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The purpose of a UserService in this context is to manage
+ * a collection active Users (updating, timeouting etc.)
+ * <p>
+ * Also all public methods of this class should be thread safe.
+ */
 @Service
 public class UserService {
     private Collection<PinpointUser> users = Collections.synchronizedList(new ArrayList<>());
 
     private PinpointUser createUser(UserInfo info) {
-        PinpointUser user = new PinpointUser(info.getUuid(), info.getName());
-        user.setPosition(info.getPosition());
-        user.setLastPositionUpdateStamp(System.currentTimeMillis());
+        PinpointUser user = new PinpointUser(info.getUuid(), info.getName(), info.getColor());
+        user.updatePosition(info.getPosition());
         this.users.add(user);
         return user;
     }
 
     public void updateUser(UserInfo info) {
         PinpointUser user = getOrCreateUser(info);
-        user.setLastPositionUpdateStamp(System.currentTimeMillis());
-        user.setAlive(true);
-        user.setPosition(info.getPosition());
+        user.updatePosition(info.getPosition());
         user.setName(info.getName());
+        user.setColor(info.getColor());
     }
 
     private PinpointUser getOrCreateUser(UserInfo info) {
@@ -45,11 +48,17 @@ public class UserService {
         }
     }
 
+    public boolean userExists(UUID uuid) {
+        synchronized (users) {
+            return this.users.stream().anyMatch(u -> u.getUuid().equals(uuid));
+        }
+    }
+
     public UserInfo getUser(UUID uuid) throws UserNotFoundException {
         return this.getUserByUuid(uuid).getInfo();
     }
 
-    public Collection<UserInfo> getUsers() {
+    public List<UserInfo> getUsers() {
         this.updateTtl();
         synchronized (users) {
             return this.users.stream().map(u -> u.getInfo()).collect(Collectors.toList());
