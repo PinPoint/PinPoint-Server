@@ -1,5 +1,6 @@
 package de.pinpoint.server;
 
+import de.pinpoint.server.user.PinpointUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
