@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class PinpointPosition {
-    private long longitude, latitude;
+    private double longitude, latitude;
 }
