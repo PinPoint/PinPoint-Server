@@ -58,10 +58,10 @@ public class UserService {
         return this.getUserByUuid(uuid).getInfo();
     }
 
-    public List<UserInfo> getUsers() {
+    public List<UserInfo> getUsers(UUID except) {
         this.updateTtl();
         synchronized (users) {
-            return this.users.stream().map(u -> u.getInfo()).collect(Collectors.toList());
+            return this.users.stream().map(u -> u.getInfo()).filter(u -> !u.getUuid().equals(except)).collect(Collectors.toList());
         }
     }
 

@@ -7,8 +7,11 @@ import de.pinpoint.server.response.UuidResponse;
 import de.pinpoint.server.user.UserInfo;
 import de.pinpoint.server.user.UserService;
 import de.pinpoint.server.user.UuidGenerator;
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +47,7 @@ public class RequestHandler {
 
     public Response handleUserListRequest(UserListRequest validRequest){
         logger.info(validRequest.getUserId() + " request UserList");
-        List<UserInfo> list = service.getUsers();
+        List<UserInfo> list = service.getUsers(validRequest.getUserId());
         return new UserListResponse(list);
     }
 }
