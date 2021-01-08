@@ -30,7 +30,7 @@ public class RequestHandler {
     private Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     public Response handleUuidRequest(UuidRequest validRequest) {
-        logger.info(validRequest.getUserId() + " request new uuid");
+        logger.debug(validRequest.getUserId() + " request new uuid");
         UUID proposed = validRequest.getUserId();
         if (service.userExists(proposed)) {
             proposed = uuidGen.generateUuid();
@@ -39,14 +39,14 @@ public class RequestHandler {
     }
 
     public Response handleUserInfoPostRequest(UserInfoPostRequest validRequest) {
-        logger.info(validRequest.getUserId() + " post UserInfo");
+        logger.debug(validRequest.getUserId() + " post UserInfo: " + validRequest.getUserInfo());
         UserInfo userInfo = validRequest.getUserInfo();
         service.updateUser(userInfo);
         return new Response();
     }
 
     public Response handleUserListRequest(UserListRequest validRequest){
-        logger.info(validRequest.getUserId() + " request UserList");
+        logger.debug(validRequest.getUserId() + " request UserList");
         List<UserInfo> list = service.getUsers(validRequest.getUserId());
         return new UserListResponse(list);
     }

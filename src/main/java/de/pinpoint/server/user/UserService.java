@@ -1,6 +1,9 @@
 package de.pinpoint.server.user;
 
 import de.pinpoint.server.Constants;
+import de.pinpoint.server.request.RequestHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,12 +17,15 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserService {
+    private Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private Collection<PinpointUser> users = Collections.synchronizedList(new ArrayList<>());
 
     private PinpointUser createUser(UserInfo info) {
         PinpointUser user = new PinpointUser(info.getUuid(), info.getName(), info.getColor());
         user.updatePosition(info.getPosition());
         this.users.add(user);
+
+        logger.info("Added user " + info.getName() + " with uuid " + info.getUuid());
         return user;
     }
 
@@ -28,6 +34,8 @@ public class UserService {
         user.updatePosition(info.getPosition());
         user.setName(info.getName());
         user.setColor(info.getColor());
+
+        logger.info("Update user " + info.getName() + " color= " + info.getColor() + " position=" + info.getPosition());
     }
 
     private PinpointUser getOrCreateUser(UserInfo info) {
@@ -72,6 +80,7 @@ public class UserService {
                 PinpointUser user = itr.next();
                 if (System.currentTimeMillis() - user.getLastPositionUpdateStamp() > Constants.POSITION_TTL) {
                     user.setAlive(false);
+                    logger.info("Removed user " + user.getName() + " from map (timeout)");
                     itr.remove();
                 }
             }
