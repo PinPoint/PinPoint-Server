@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserService {
-    private Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private Logger logger = LoggerFactory.getLogger(UserService.class);
     private Collection<PinpointUser> users = Collections.synchronizedList(new ArrayList<>());
 
     private PinpointUser createUser(UserInfo info) {
@@ -25,7 +25,7 @@ public class UserService {
         user.updatePosition(info.getPosition());
         this.users.add(user);
 
-        logger.info("Added user " + info.getName() + " with uuid " + info.getUuid());
+        logger.info("Add user " + info.getName() + " with uuid " + info.getUuid());
         return user;
     }
 
@@ -35,7 +35,7 @@ public class UserService {
         user.setName(info.getName());
         user.setColor(info.getColor());
 
-        logger.info("Update user " + info.getName() + " color= " + info.getColor() + " position=" + info.getPosition());
+        logger.info("Update user " + info.getName() + " color=" + info.getColor() + " position=" + info.getPosition());
     }
 
     private PinpointUser getOrCreateUser(UserInfo info) {
